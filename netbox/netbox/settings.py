@@ -6,6 +6,7 @@ import platform
 import sys
 import warnings
 from urllib.parse import urlencode, urlsplit
+from pathlib import Path
 
 import django
 import requests
@@ -28,7 +29,7 @@ from utilities.string import trailing_slash
 VERSION = '4.0.7-dev'
 HOSTNAME = platform.node()
 # Set the base directory two levels up
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = Path(__file__).resolve().parent.parent
 
 # Validate Python version
 if sys.version_info < (3, 10):
@@ -90,7 +91,7 @@ DEFAULT_PERMISSIONS = getattr(configuration, 'DEFAULT_PERMISSIONS', {
 })
 DEVELOPER = getattr(configuration, 'DEVELOPER', False)
 DJANGO_ADMIN_ENABLED = getattr(configuration, 'DJANGO_ADMIN_ENABLED', False)
-DOCS_ROOT = getattr(configuration, 'DOCS_ROOT', os.path.join(os.path.dirname(BASE_DIR), 'docs'))
+DOCS_ROOT = getattr(configuration, 'DOCS_ROOT', BASE_DIR / 'docs')
 EMAIL = getattr(configuration, 'EMAIL', {})
 EVENTS_PIPELINE = getattr(configuration, 'EVENTS_PIPELINE', (
     'extras.events.process_event_queue',
@@ -108,7 +109,7 @@ LOGIN_PERSISTENCE = getattr(configuration, 'LOGIN_PERSISTENCE', False)
 LOGIN_REQUIRED = getattr(configuration, 'LOGIN_REQUIRED', True)
 LOGIN_TIMEOUT = getattr(configuration, 'LOGIN_TIMEOUT', None)
 LOGOUT_REDIRECT_URL = getattr(configuration, 'LOGOUT_REDIRECT_URL', 'home')
-MEDIA_ROOT = getattr(configuration, 'MEDIA_ROOT', os.path.join(BASE_DIR, 'media')).rstrip('/')
+MEDIA_ROOT = getattr(configuration, 'MEDIA_ROOT', BASE_DIR / 'media').rstrip('/')
 METRICS_ENABLED = getattr(configuration, 'METRICS_ENABLED', False)
 PLUGINS = getattr(configuration, 'PLUGINS', [])
 PLUGINS_CONFIG = getattr(configuration, 'PLUGINS_CONFIG', {})
@@ -133,11 +134,11 @@ REMOTE_AUTH_USER_LAST_NAME = getattr(configuration, 'REMOTE_AUTH_USER_LAST_NAME'
 REMOTE_AUTH_STAFF_GROUPS = getattr(configuration, 'REMOTE_AUTH_STAFF_GROUPS', [])
 REMOTE_AUTH_STAFF_USERS = getattr(configuration, 'REMOTE_AUTH_STAFF_USERS', [])
 # Required by extras/migrations/0109_script_models.py
-REPORTS_ROOT = getattr(configuration, 'REPORTS_ROOT', os.path.join(BASE_DIR, 'reports')).rstrip('/')
+REPORTS_ROOT = getattr(configuration, 'REPORTS_ROOT', BASE_DIR / 'reports').rstrip('/')
 RQ_DEFAULT_TIMEOUT = getattr(configuration, 'RQ_DEFAULT_TIMEOUT', 300)
 RQ_RETRY_INTERVAL = getattr(configuration, 'RQ_RETRY_INTERVAL', 60)
 RQ_RETRY_MAX = getattr(configuration, 'RQ_RETRY_MAX', 0)
-SCRIPTS_ROOT = getattr(configuration, 'SCRIPTS_ROOT', os.path.join(BASE_DIR, 'scripts')).rstrip('/')
+SCRIPTS_ROOT = getattr(configuration, 'SCRIPTS_ROOT', BASE_DIR / 'scripts').rstrip('/')
 SEARCH_BACKEND = getattr(configuration, 'SEARCH_BACKEND', 'netbox.search.backends.CachedValueSearchBackend')
 SECRET_KEY = getattr(configuration, 'SECRET_KEY')  # Required
 SECURE_HSTS_INCLUDE_SUBDOMAINS = getattr(configuration, 'SECURE_HSTS_INCLUDE_SUBDOMAINS', False)
@@ -402,7 +403,7 @@ if METRICS_ENABLED:
 ROOT_URLCONF = 'netbox.urls'
 
 # Templates
-TEMPLATES_DIR = BASE_DIR + '/templates'
+TEMPLATES_DIR = BASE_DIR / 'templates'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -459,13 +460,13 @@ USE_X_FORWARDED_HOST = True
 X_FRAME_OPTIONS = 'SAMEORIGIN'
 
 # Static files (CSS, JavaScript, Images)
-STATIC_ROOT = BASE_DIR + '/static'
+STATIC_ROOT = BASE_DIR / 'static'
 STATIC_URL = f'/{BASE_PATH}static/'
 STATICFILES_DIRS = (
-    os.path.join(BASE_DIR, 'project-static', 'dist'),
-    os.path.join(BASE_DIR, 'project-static', 'img'),
-    os.path.join(BASE_DIR, 'project-static', 'js'),
-    ('docs', os.path.join(BASE_DIR, 'project-static', 'docs')),  # Prefix with /docs
+    BASE_DIR / 'project-static' / 'dist',
+    BASE_DIR / 'project-static' / 'img',
+    BASE_DIR / 'project-static' / 'js',
+    ('docs', BASE_DIR / 'project-static' / 'docs'),  # Prefix with /docs
 )
 
 # Media URL
@@ -733,7 +734,7 @@ LANGUAGES = (
     ('zh', _('Chinese')),
 )
 LOCALE_PATHS = (
-    BASE_DIR + '/translations',
+    BASE_DIR / 'translations',
 )
 
 #
